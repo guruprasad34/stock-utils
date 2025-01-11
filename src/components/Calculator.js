@@ -38,8 +38,8 @@ const Calculator = () => {
   }, []);
 
   const layoutStyles = {
-    containerWidth: '85%', // Width of the calculator container
-    containerHeight: '85%', // Height of the calculator container
+    containerWidth: '100%', // Set the container width to 100% for responsiveness
+    containerHeight: 'auto', // Height adjusts automatically based on content
   };
 
   const handleInputChange = (index, field, value) => {
@@ -65,12 +65,18 @@ const Calculator = () => {
     const totalInvestment = shares.reduce((sum, share) => {
       const price = parseFloat(share.buyPrice) || 0;
       const qty = parseInt(share.quantity) || 0;
-      return sum + price * qty;
+      if (price && qty) {
+        return sum + price * qty;
+      }
+      return sum
     }, 0);
 
     const totalQuantity = shares.reduce((sum, share) => {
       const qty = parseInt(share.quantity) || 0;
-      return sum + qty;
+      if (share.buyPrice) {
+        return sum + qty;
+      }
+      return sum;
     }, 0);
 
     const averagePrice = totalQuantity > 0 ? totalInvestment / totalQuantity : 0;
@@ -93,6 +99,7 @@ const Calculator = () => {
       sx={{
         width: '100vw',
         backgroundColor: '#f4f6f8',
+        padding: 2,
       }}
     >
       <Box
@@ -127,6 +134,7 @@ const Calculator = () => {
             display="flex"
             alignItems="center"
             gap={2}
+            flexDirection={{ xs: 'column', sm: 'row' }} // Stack items vertically on small screens
             sx={{
               transition: 'all 0.3s ease',
               '&:hover': { backgroundColor: '#f9fafb', borderRadius: 2 },
@@ -139,30 +147,47 @@ const Calculator = () => {
               onChange={(e) => handleInputChange(index, 'buyPrice', e.target.value)}
               fullWidth
               sx={{
-                backgroundColor: '#ecf0f1',
+                // backgroundColor: '#ecf0f1',
                 borderRadius: 1,
               }}
             />
-            <TextField
-              label={`Quantity (Share ${index + 1})`}
-              type="number"
-              value={share.quantity}
-              onChange={(e) => handleInputChange(index, 'quantity', e.target.value)}
-              fullWidth
+            <Box
+              display="flex"
+              alignItems="center"
+              gap={1} // Space between the quantity field and delete icon
               sx={{
-                backgroundColor: '#ecf0f1',
-                borderRadius: 1,
+                width: '100%',
+                flexDirection: 'row', // Ensure horizontal alignment
               }}
-            />
-            {index > 0 && (
-              <IconButton
-                color="error"
-                onClick={() => handleDeleteShare(index)}
-                sx={{ color: '#e74c3c' }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            )}
+            >
+              <TextField
+                label={`Quantity (Share ${index + 1})`}
+                type="number"
+                value={share.quantity}
+                onChange={(e) => handleInputChange(index, 'quantity', e.target.value)}
+                fullWidth
+                sx={{
+                  // backgroundColor: '#ecf0f1',
+                  borderRadius: 1,
+                }}
+              />
+              {index > 0 && (
+                <IconButton
+                  color="error"
+                  onClick={() => handleDeleteShare(index)}
+                  sx={{
+                    color: '#e74c3c',
+                    padding: '10px', // Increased padding to ensure spacing around the icon
+                    marginLeft: '8px', // Ensure space between the quantity field and icon
+                    '&:hover': {
+                      backgroundColor: '#f4f6f8', // Adding hover effect for better visual appeal
+                    },
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              )}
+            </Box>
           </Box>
         ))}
 
@@ -186,6 +211,7 @@ const Calculator = () => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
+            flexDirection={{ xs: 'column', sm: 'row' }} // Stack results vertically on small screens
             sx={{
               backgroundColor: '#ecf0f1',
               padding: 3,
@@ -194,13 +220,13 @@ const Calculator = () => {
               boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
             }}
           >
-            <Box>
+            <Box mb={{ xs: 2, sm: 0 }}>
               <Typography variant="h6" sx={{ color: '#34495e' }}>
                 Total Shares
               </Typography>
               <Typography variant="h5">{results.totalQuantity}</Typography>
             </Box>
-            <Box>
+            <Box mb={{ xs: 2, sm: 0 }}>
               <Typography variant="h6" sx={{ color: '#34495e' }}>
                 Total Amount
               </Typography>
