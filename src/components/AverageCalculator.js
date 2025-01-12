@@ -16,7 +16,7 @@ import {
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const Calculator = () => {
+const AverageCalculator = () => {
   const [shares, setShares] = useState([{ buyPrice: '', quantity: '' }, { buyPrice: '', quantity: '' }]);
   const [currencySymbol, setCurrencySymbol] = useState('₹'); // Default to INR
 
@@ -288,4 +288,4 @@ const Calculator = () => {
   );
 };
 
-export default Calculator;
+export default AverageCalculator;
