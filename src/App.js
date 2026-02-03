@@ -4,12 +4,14 @@ import { Box, AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, L
 import MenuIcon from '@mui/icons-material/Menu';
 import AverageCalculatorPage from './components/AverageCalculator';
 import ReturnCalculatorPage from './components/ReturnsCalculator';
+import LoanCalculatorPage from './components/LoanCalculator';
 import './App.css';
 
 // Define an array of route objects to make it dynamic
 const routes = [
   { path: '/average', label: 'Average Calculator', component: <AverageCalculatorPage /> },
   { path: '/returns', label: 'Returns Calculator', component: <ReturnCalculatorPage /> },
+  { path: '/loan', label: 'Loan Calculator', component: <LoanCalculatorPage /> },
   // Add new route objects here as you add new components
 ];
 
@@ -28,7 +30,7 @@ const App = () => {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" sx={ { flexGrow: 1 } }>
-              Stock Calculators
+              Calculators
             </Typography>
             {/* Dynamically generate navbar buttons */ }
             { routes.map((route) => (

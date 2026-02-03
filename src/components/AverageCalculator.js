@@ -19,6 +19,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const AverageCalculator = () => {
   const [shares, setShares] = useState([{ buyPrice: '', quantity: '' }, { buyPrice: '', quantity: '' }]);
   const [currencySymbol, setCurrencySymbol] = useState('₹'); // Default to INR
+  const [currentStockPrice, setCurrentStockPrice] = useState('');
 
   useEffect(() => {
     // Detect user's region and set currency symbol
@@ -85,6 +86,8 @@ const AverageCalculator = () => {
       totalInvestment: totalInvestment.toFixed(2),
       totalQuantity,
       averagePrice: averagePrice.toFixed(2),
+      currentValue: (totalQuantity * currentStockPrice).toFixed(2),
+      currentReturns: (((currentStockPrice - averagePrice) / averagePrice) * 100).toFixed(2)
     };
   };
 
@@ -126,7 +129,18 @@ const AverageCalculator = () => {
         >
           Stock Average Calculator
         </Typography>
-
+        <TextField
+              label="Current Market Stock Price Per Share"
+              type="number"
+              value={currentStockPrice}
+              onChange={(e) => setCurrentStockPrice(e.target.value)}
+              fullWidth
+              sx={{
+                // backgroundColor: '#ecf0f1',
+                borderRadius: 1,
+                marginBottom: '10px',
+              }}
+            />
         {shares.map((share, index) => (
           <Box
             key={index}
@@ -234,6 +248,18 @@ const AverageCalculator = () => {
             </Box>
             <Box>
               <Typography variant="h6" sx={{ color: '#34495e' }}>
+                Current Value
+              </Typography>
+              <Typography variant="h5">{currencySymbol}{results.currentValue}</Typography>
+            </Box>
+            <Box>
+              <Typography variant="h6" sx={{ color: '#34495e' }}>
+                Returns
+              </Typography>
+              <Typography variant="h5">{results.currentReturns}%</Typography>
+            </Box>
+            <Box>
+              <Typography variant="h6" sx={{ color: '#34495e' }}>
                 Average Price
               </Typography>
               <Typography variant="h5">{currencySymbol}{results.averagePrice}</Typography>
@@ -261,6 +287,12 @@ const AverageCalculator = () => {
                     <TableCell align="right" sx={{ color: 'white', fontWeight: 'bold' }}>
                       Total Amount
                     </TableCell>
+                    <TableCell align="right" sx={{ color: 'white', fontWeight: 'bold' }}>
+                      Current value
+                    </TableCell>
+                    <TableCell align="right" sx={{ color: 'white', fontWeight: 'bold' }}>
+                      Returns
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -268,13 +300,16 @@ const AverageCalculator = () => {
                     const price = parseFloat(share.buyPrice) || 0;
                     const qty = parseInt(share.quantity) || 0;
                     const totalAmount = price * qty;
-
+                    const currentValue = qty * (currentStockPrice || 0); 
+                    const currentReturns = (((currentStockPrice - price) / price) * 100);
                     return (
                       <TableRow key={index}>
                         <TableCell>Share {index + 1}</TableCell>
                         <TableCell align="right">{qty}</TableCell>
                         <TableCell align="right">{price.toFixed(2)}</TableCell>
                         <TableCell align="right">{totalAmount.toFixed(2)}</TableCell>
+                        <TableCell align="right">{currentValue.toFixed(2)}</TableCell>
+                        <TableCell align="right">{currentReturns.toFixed(2)}%</TableCell>
                       </TableRow>
                     );
                   })}
